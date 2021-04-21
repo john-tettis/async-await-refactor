@@ -3,10 +3,16 @@
 
 
 //favorite number
-axios.get('http://numbersapi.com/8?json').then(res=>console.log(res.data.text))
+async function favoriteNumber(){
+    let res = await axios.get('http://numbersapi.com/8?json')
+    console.log(res.data.text)
+
+}
+favoriteNumber()
 
 
-axios.get('http://numbersapi.com/1,2,4..7').then(res=>{
+async function someNumbers(){
+    let res = await axios.get('http://numbersapi.com/1,2,4..7')
     let div = document.createElement('div')
     let h1 = document.createElement('h1')
     let ul = document.createElement('ul')
@@ -19,16 +25,18 @@ axios.get('http://numbersapi.com/1,2,4..7').then(res=>{
         li.innerText = res.data[val]
         ul.appendChild(li);
     }
-})
+
+}
+someNumbers()
 
 //favorite number 4 times
-let favPromises = []
-for(let i=0; i<4;i++){
-    favPromises.push(
-        axios.get('http://numbersapi.com/8?json')
-    )
-}
-Promise.all(favPromises).then(res=>{
+async function favoriteNumberFourTimes(){
+    let favPromises = []
+    for(let i=0; i<4;i++){
+        favPromises.push(
+            axios.get('http://numbersapi.com/8?json')
+        )}
+    let promises = await Promise.all(favPromises)
     let div = document.createElement('div')
     let h1 = document.createElement('h1')
     let ul = document.createElement('ul')
@@ -36,9 +44,11 @@ Promise.all(favPromises).then(res=>{
     div.appendChild(h1)
     div.appendChild(ul)
     document.body.appendChild(div)
-    for(val of res){
+    for(val of promises){
         let li = document.createElement('li')
         li.innerText = val.data.text
         ul.appendChild(li)
     }
-})
+}
+
+favoriteNumberFourTimes()

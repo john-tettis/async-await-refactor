@@ -1,20 +1,29 @@
-let deck ='';
 
-axios.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1').then(res=> {
-    deck = res.data.deck_id
-    console.log(deck)
-})
-
-$('button').on('click',(e)=>{
-    axios.get(`https://deckofcardsapi.com/api/deck/${deck}/draw/?count=1`).then(res=>{
+let deck ={
+    async setDeck(){
+        let res = await axios.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
+        this.id = res.data.deck_id
+    },
+    async draw(){
+        let res =  await axios.get(`https://deckofcardsapi.com/api/deck/${this.id}/draw/?count=1`)
         if(res.data.cards.length===0){
             alert('All cards have been drawn')
         }
-        let val = res.data.cards[0].value
-        let suit = res.data.cards[0].suit
+        else{
         let img =res.data.cards[0].image
         appendCard(img)
-    }).catch(err =>console.log(err))
+        }
+    }
+}
+deck.setDeck()
+
+$('button').on('click',(e)=>{
+    try{
+        deck.draw()
+    }
+    catch(err){
+        console.log(err)
+    }
 });
 
 function appendCard(img){
